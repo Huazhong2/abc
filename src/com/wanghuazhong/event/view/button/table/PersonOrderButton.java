@@ -22,8 +22,7 @@ import javax.swing.JToolBar;
 import javax.swing.table.DefaultTableModel;
 
 import com.wanghuazhong.event.bean.OrderIdBean;
-import com.wanghuazhong.event.controller.PersonOrderController;
-import com.wanghuazhong.event.entity.MatchImformation;
+import com.wanghuazhong.event.controller.OrderController;
 import com.wanghuazhong.event.entity.OrderImformation;
 
 public class PersonOrderButton extends JButton{
@@ -49,10 +48,8 @@ public class PersonOrderButton extends JButton{
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				//调用查询窗口 
-
+				//调用查询窗口
 				showRecordWindows();
-				
 			}
 			
 		});	
@@ -238,7 +235,7 @@ public class PersonOrderButton extends JButton{
 	}
 	
 	
-	static PersonOrderController controller = new PersonOrderController();
+	static OrderController controller = new OrderController();
 	
 	//从数据库获取订单信息
 	public List<OrderImformation> getOrderImformation(String search){
@@ -249,11 +246,12 @@ public class PersonOrderButton extends JButton{
 	
 	
 	//从数据库删除信息
-	public boolean deleteImformation(OrderIdBean orderIdBean) {
+	public void deleteImformation(OrderIdBean orderIdBean) {
 		
-		return controller.deleteImformation(orderIdBean);
+		 controller.deleteImformation(orderIdBean);
 		
 	}
+	
 	
 	//对已预约且已经被受理的订单发表评论
 	public boolean setReview(String review) {

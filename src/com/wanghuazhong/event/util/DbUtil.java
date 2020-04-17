@@ -21,7 +21,7 @@ public class DbUtil {
 	
 	
 	//
-	public Connection getCon() {
+	public  Connection getCon() {
 		
 		//
 		try {

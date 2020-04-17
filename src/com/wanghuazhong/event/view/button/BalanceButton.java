@@ -12,7 +12,8 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
-import com.wanghuazhong.event.controller.BalanceController;
+import com.wanghuazhong.event.controller.OrderController;
+import com.wanghuazhong.event.controller.UserController;
 import com.wanghuazhong.event.view.signwindow.SignInCompoment;
 
 public class BalanceButton extends JButton{
@@ -75,6 +76,7 @@ public class BalanceButton extends JButton{
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
 				// TODO 自动生成的方法存根
+				//
 				if(rechargeField.getText().equals("")) {
 					JOptionPane.showMessageDialog(dialog, "输入不能为空");
 					return ;
@@ -91,6 +93,7 @@ public class BalanceButton extends JButton{
 						JOptionPane.showMessageDialog(dialog, "您的输入超过限制");
 						return;
 					}
+					
 					
 				setRecharge(rechargeNumber);
 				
@@ -113,20 +116,27 @@ public class BalanceButton extends JButton{
 		
 	}
 	
-	static BalanceController controller = new BalanceController();
+	static OrderController orderController = new OrderController();
+	static UserController userController = new UserController();
 	
 	
 	
-	
-	public boolean setRecharge(int rechargeNumber) {
-		return controller.setRecharge(rechargeNumber);
+	public void setRecharge(int rechargeNumber) {
+		
+		orderController.setRecharge(rechargeNumber);
 		
 	}
 	
 	
 	public int getBalance() {
 		
-		return controller.getBalance()	;
+		return userController.getBalance();
+			
 	}
 	
+
+	
 }
+
+
+

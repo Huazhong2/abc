@@ -8,7 +8,7 @@ import java.awt.event.ActionListener;
 import javax.swing.JButton;
 import javax.swing.JOptionPane;
 
-import com.wanghuazhong.event.controller.LogInAndSignInController;
+import com.wanghuazhong.event.controller.UserController;
 import com.wanghuazhong.event.entity.UserImformation;
 import com.wanghuazhong.event.view.operatewindows.WindowsCompoment;
 import com.wanghuazhong.event.view.signwindow.SignInCompoment;
@@ -81,12 +81,13 @@ public class SignInButton extends JButton{
 		JOptionPane.showMessageDialog(SignInCompoment.getSignInWindows(), "登录成功");
 	}
 	
-	static LogInAndSignInController logInAndSignIn = new LogInAndSignInController();
+	
+	static UserController controller = new UserController();
 	static UserImformation userImf = new UserImformation();
 	
 	public boolean CheckAccPass(UserImformation userImf) {
 		
-		return logInAndSignIn.checkAccPass(userImf);
+		return controller.userCheckAccPass(userImf);
 		//需要用到数据库
 	}
 	

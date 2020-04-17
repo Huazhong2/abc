@@ -11,6 +11,7 @@ import javax.swing.JPanel;
 import com.wanghuazhong.event.view.button.BalanceButton;
 import com.wanghuazhong.event.view.button.PersonImformation;
 import com.wanghuazhong.event.view.button.table.AdminMatchButton;
+import com.wanghuazhong.event.view.button.table.AdminOrderButton;
 import com.wanghuazhong.event.view.button.table.MatchOrderButton;
 import com.wanghuazhong.event.view.button.table.PersonOrderButton;
 import com.wanghuazhong.event.view.swinglayout.ColumnLayout;
@@ -35,6 +36,7 @@ public class WindowsCompoment {
 	public static AdminMatchButton adminMatchButton = new AdminMatchButton();
 	public static PersonOrderButton personOrderButto = new PersonOrderButton();
 	public static BalanceButton balanceButton = new BalanceButton();
+	public static AdminOrderButton adminOrderButton = new AdminOrderButton();
 	
 //	public static final 
 	
@@ -84,7 +86,7 @@ public class WindowsCompoment {
 		//对第二张卡片的两侧，也就是管理员的功能区添加组件
 		
 		aLeft.add(adminMatchButton);
-		
+		aRight.add(adminOrderButton);
 		
 		
 		

@@ -7,7 +7,7 @@ public class MatchImformation {
 	private String teamName1;
 	private String teamName2;
 	private String time;
-	private int ticketPrice;
+	private int ticketPrice=0;
 	
 	
 	public int getId() {

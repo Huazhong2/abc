@@ -1,5 +1,11 @@
 package com.wanghuazhong.event.bean;
 
+
+/** @version:1.0
+* @Description:程序注册界面传给后端的数据
+* @author:WHZ
+* @date:2020年4月17日
+*/ 
 public class LogInUserImformationBean {
 	
 	private String name;

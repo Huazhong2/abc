@@ -25,9 +25,8 @@ import javax.swing.JToolBar;
 import javax.swing.table.DefaultTableModel;
 
 import com.wanghuazhong.event.bean.MatchIdBean;
-import com.wanghuazhong.event.controller.AdminMatchController;
+import com.wanghuazhong.event.controller.MatchController;
 import com.wanghuazhong.event.entity.MatchImformation;
-import com.wanghuazhong.event.entity.OrderImformation;
 
 public class AdminMatchButton extends JButton{
 
@@ -194,9 +193,8 @@ public class AdminMatchButton extends JButton{
 			//设置列设置器
 			table.getColumnModel().getColumn(0).setCellRenderer(new MatchOrderIdTableCellRenderer());
 			//设置列宽
-			table.getColumnModel().getColumn(0).setPreferredWidth(20);
-			
-			
+			table.getColumnModel().getColumn(0).setPreferredWidth(10);
+		
 		}
 		
 		
@@ -339,7 +337,7 @@ public class AdminMatchButton extends JButton{
 		
 		
 		
-		static AdminMatchController controller = new AdminMatchController();
+		static MatchController controller = new MatchController();
 		
 		//从数据中搜索
 		//用到数据库
@@ -350,24 +348,32 @@ public class AdminMatchButton extends JButton{
 		}
 		//添加单条记录到数据库
 		//添加单条记录,用到数据库
-		public boolean addMatchImformation(MatchImformation matchImfo){
+		public void addMatchImformation(MatchImformation matchImfo){
 			
-			return controller.addMatchImformation(matchImfo);
+			 controller.addMatchImformation(matchImfo);
 		}
 		
 		
 		//检查输入
 		//检查输入是否合理
 		public boolean checkEnter(MatchImformation matchImfo) {
-			return controller.checkEnter(matchImfo);
 			
+			if(matchImfo.getId()>100000||matchImfo.getTicketPrice()>100000) {
+				return false;
+			}
+			if(matchImfo.getName().length()>20||matchImfo.getTeamName1().length()>20||
+					matchImfo.getTime().length()>20) {
+				return false;
+			}
+			
+			return true;
 		}
 		//从数据库删除
 		
 		
 		//从数据库删除
-		public boolean deleteFromDataBase(MatchIdBean matchIdBean) {
-			return controller.deleteFromDataBase(matchIdBean);
+		public void deleteFromDataBase(MatchIdBean matchIdBean) {
+			 controller.deleteFromDataBase(matchIdBean);
 			
 		}
 		

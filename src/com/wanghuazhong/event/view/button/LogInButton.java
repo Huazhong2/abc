@@ -5,6 +5,8 @@ import java.awt.FlowLayout;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.lang.reflect.Array;
+import java.util.Objects;
 
 import javax.swing.JButton;
 import javax.swing.JComboBox;
@@ -15,8 +17,7 @@ import javax.swing.JPanel;
 import javax.swing.JTextField;
 
 import com.wanghuazhong.event.bean.LogInUserImformationBean;
-import com.wanghuazhong.event.controller.LogInAndSignInController;
-import com.wanghuazhong.event.entity.UserImformation;
+import com.wanghuazhong.event.controller.UserController;
 import com.wanghuazhong.event.view.signwindow.SignInCompoment;
 
 
@@ -27,8 +28,7 @@ public class LogInButton extends JButton {
 	public final static int width = 74;
 	public final static int height = 38;
 	private String [] field = new String[4];
-	private UserImformation userImformation = new UserImformation();
-	
+	private static LogInUserImformationBean logInUserImf = new LogInUserImformationBean();
 	
 	public LogInButton() {
 		super();
@@ -103,10 +103,9 @@ public class LogInButton extends JButton {
 			logInUserImf.setPassword(field[3]);
 			
 			
-			if(logInCheck(logInUserImf)) {
+			if(logInCheck(field)) {
 					showEnterWarMessage();
 			}
-			//TODO
 			//检测账号是否已经存在
 			else if(!isAccountExist(field[2])) {
 				showAccountWarMessage();
@@ -156,27 +155,44 @@ public class LogInButton extends JButton {
 		JOptionPane.showMessageDialog(SignInCompoment.getSignInWindows(), "该账号已存在");
 	}
 		
+	public boolean logInCheck(String[] content) {
+		for(int i=0;i<Array.getLength(content);i++) {
+			
+		if(Objects.equals(content[i], "")||Objects.equals(content[i], "请选择")||content[i].length()>15) {
+			System.out.println("错误");return true;
+		}
+		if(i==2) {
+			if(content[i].length()!=10) {
+				return true;
+			}
+			char str[]=content[i].toCharArray();
+			for(int j=0;j<str.length;j++) {
+				if(!Character.isDigit(str[j])) {
+					System.out.println("错误4");
+					break;
+				}
+			}
+		}
 		
+		}
+	return false;
+	}
 	
-	static LogInAndSignInController controller = new LogInAndSignInController();
-	static LogInUserImformationBean logInUserImf = new LogInUserImformationBean();
+	
+	
+	
+	static UserController userController = new UserController();
+	
 
-	public boolean logIn(LogInUserImformationBean logInUseImf) { 
+	public void logIn(LogInUserImformationBean logInUseImf) { 
 		
-		controller.logIn(logInUseImf);
-		return false;
+		userController.userLogIn(logInUseImf);
 		
 	}
 	
-	
-	public boolean logInCheck(LogInUserImformationBean LogInUserImf) {
-		
-		return controller.logInCheck(LogInUserImf);
-		
-	}
 	
 	public boolean isAccountExist(String account) {
-		return controller.isAccountExist(account);
+		return userController.isAccountExist(account);
 		
 	}
 	

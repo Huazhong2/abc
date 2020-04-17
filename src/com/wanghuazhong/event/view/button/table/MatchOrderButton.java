@@ -23,10 +23,11 @@ import javax.swing.JTextField;
 import javax.swing.JToolBar;
 import javax.swing.table.DefaultTableModel;
 
-import com.wanghuazhong.event.controller.MatchOrderController;
+import com.wanghuazhong.event.controller.MatchController;
+import com.wanghuazhong.event.controller.OrderController;
 import com.wanghuazhong.event.entity.MatchImformation;
 import com.wanghuazhong.event.entity.OrderImformation;
-import com.wanghuazhong.event.service.Impl.LogInAndSignInService;
+import com.wanghuazhong.event.service.Impl.UserServiceImpl;
 import com.wanghuazhong.event.view.operatewindows.WindowsCompoment;
 
 public class MatchOrderButton extends JButton {
@@ -92,7 +93,7 @@ public class MatchOrderButton extends JButton {
 				List<OrderImformation> orderImfo = getOrderImformation();
 				if(Objects.equals(orderImfo,null)) return ;
 				int buttonSelection = JOptionPane.showConfirmDialog(dialog, "总花费为"+bill+"元,"+"是否预订您选中的赛事?","确认",JOptionPane.YES_NO_OPTION);
-				if(buttonSelection==0) {
+				if(buttonSelection==0) {System.out.println("扣除余额mmatchorderbutton检测,账单");
 					if(addOrder(orderImfo,bill)) {
 					JOptionPane.showMessageDialog(dialog,"预定成功");
 					}
@@ -250,13 +251,14 @@ public class MatchOrderButton extends JButton {
 			int[] rows = table.getSelectedRows();
 			if(rows.length==0) return null;
 			List<OrderImformation> orderImfoList = new ArrayList<OrderImformation>();
+			bill=0;
 			for(int i = rows.length-1;i>=0;i--) {
 				MatchImformation matchImfo = getRowImformation(rows[i]);
 				OrderImformation orderImfo = new OrderImformation();
 				orderImfo.setOrderTypeId(matchImfo.getId());
 				orderImfo.setOrderType("赛事");
 				orderImfo.setOrderName(matchImfo.getName());
-				orderImfo.setUserAccount(LogInAndSignInService.getAccount());
+				orderImfo.setUserAccount(UserServiceImpl.getUserAccount());
 				orderImfo.setPrice((int) matchImfo.getTicketPrice());
 				bill= bill+(int)matchImfo.getTicketPrice();
 				System.out.println("获取订单    "+bill+"    get"+(int)matchImfo.getTicketPrice());
@@ -282,12 +284,8 @@ public class MatchOrderButton extends JButton {
 			
 		}
 		
-		
-		
-		
-		
-		
-		static MatchOrderController controller = new MatchOrderController();
+		static OrderController orderController = new OrderController();
+		static MatchController matchController = new MatchController();
 		
 		//用到数据库
 		//向数据库添加order
@@ -297,7 +295,7 @@ public class MatchOrderButton extends JButton {
 				return false;
 			}
 			else {
-				controller.addOrder(orderImfoList);
+				orderController.addOrder(orderImfoList);
 				return true;
 			}
 			
@@ -307,13 +305,13 @@ public class MatchOrderButton extends JButton {
 		//从数据库获取信息
 		public List<MatchImformation> getMatchImformation(String searchContent) {
 			
-			return controller.getMatchImformation(searchContent);
+			return matchController.getMatchImformation(searchContent);
 			
 		}
 		//用到数据库
 		public boolean minusBalance(int bill) {
 			
-			return controller.minusBalance(bill);
+			return orderController.minusBalance(bill);
 			
 		}
 		

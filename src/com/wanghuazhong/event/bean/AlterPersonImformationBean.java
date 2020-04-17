@@ -1,5 +1,11 @@
 package com.wanghuazhong.event.bean;
 
+
+/** @version:1.0
+* @Description:程序的修改个人信息功能界面穿给后端和从后端获取的数据
+* @author:WHZ
+* @date:2020年4月17日
+*/ 
 public class AlterPersonImformationBean {
 	
 	

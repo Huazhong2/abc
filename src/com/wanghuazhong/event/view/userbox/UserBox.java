@@ -7,7 +7,7 @@ import java.awt.event.ActionListener;
 import javax.swing.JComboBox;
 import javax.swing.JOptionPane;
 
-import com.wanghuazhong.event.controller.UserBoxController;
+import com.wanghuazhong.event.controller.UserController;
 import com.wanghuazhong.event.view.operatewindows.WindowsCompoment;
 
 public class UserBox extends JComboBox<String>{
@@ -54,7 +54,7 @@ public class UserBox extends JComboBox<String>{
 		
 	}
 	
-	static UserBoxController controller = new UserBoxController();
+	static UserController controller = new UserController();
 	
 	public int getIsAdmin() {
 		

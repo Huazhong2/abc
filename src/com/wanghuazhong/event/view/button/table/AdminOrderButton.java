@@ -2,10 +2,13 @@ package com.wanghuazhong.event.view.button.table;
 
 import java.awt.BorderLayout;
 import java.awt.Dimension;
+import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.net.URL;
 import java.util.List;
+import java.util.Objects;
+import java.util.Vector;
 
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
@@ -19,6 +22,7 @@ import javax.swing.JToolBar;
 import javax.swing.table.DefaultTableModel;
 
 import com.wanghuazhong.event.bean.OrderIdBean;
+import com.wanghuazhong.event.controller.OrderController;
 import com.wanghuazhong.event.entity.OrderImformation;
 
 public class AdminOrderButton extends JButton{
@@ -30,11 +34,28 @@ public class AdminOrderButton extends JButton{
 	private JTable table;
 	private JButton addButton;
 	private JButton cancelButton;
-	JToolBar toolBar = new JToolBar();
+	private JToolBar toolBar = new JToolBar();
+	private OrderIdBean orderIdBean;
 	
 	public AdminOrderButton() {
 		super();
 		
+		this.setText("订单详情");
+		this.setFont(new Font("微软雅黑",0,14));
+		this.setToolTipText("点击查看");
+		
+		this.addActionListener(new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				//调用查询窗口 
+
+				showRecordWindows();
+				
+			}
+			
+		});	
+			
 		
 		//面板初始化
 		panel.setLayout(new BorderLayout());
@@ -46,7 +67,7 @@ public class AdminOrderButton extends JButton{
 		initialTable();
 		
 		//给菜单栏添加第一个按钮
-		addButton=createToolBarButton("添加","ic_reserve.png");
+		addButton=createToolBarButton("受理","ic_reserve.png");
 		toolBar.add(addButton);
 		//菜单栏第一个按钮的点击事件
 		addButton.addActionListener(new ActionListener() {
@@ -56,21 +77,34 @@ public class AdminOrderButton extends JButton{
 			public void actionPerformed(ActionEvent arg0) {
 				// TODO 自动生成的方法存根
 				
+				orderIdBean = getIdList();
+				if(Objects.equals(orderIdBean,null)) {
+					return;
 				}
-				
-			
+				else {
+					setOrderStatus(orderIdBean,true);
+					dealReturnBalance(orderIdBean);
+				}
+				}
 		});
 				
 		
 		//菜单栏第二个按钮的点击事件
-	    cancelButton = createToolBarButton("取消","ic_cancel.png");
+	    cancelButton = createToolBarButton("驳回","ic_cancel.png");
 		toolBar.add(cancelButton);
 		cancelButton.addActionListener(new ActionListener() {
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				// TODO 自动生成的方法存根
-				
+				orderIdBean = getIdList();
+				if(Objects.equals(orderIdBean,null)) {
+					return;
+				}
+				else {
+					setOrderStatus(orderIdBean,false);
+					dealReturnBalance(orderIdBean);
+				}
 			}
 			
 		});
@@ -89,28 +123,27 @@ public class AdminOrderButton extends JButton{
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				// TODO 自动生成的方法存根
-//				String searchContent = searchTextField.getText();
-//				tableModel.setRowCount(0);//先清空了model的内容，搜索时再放入
-//				
-//				List<MatchImformation> matchImfoList = getMatchImformation(searchContent);
-//				if(Objects.equals(matchImfoList, null)) {
-//					return;
-//				}
-//				addData(matchImfoList);
+				String searchContent = searchTextField.getText();
+				tableModel.setRowCount(0);//先清空了model的内容，搜索时再放入
+				
+				List<OrderImformation> orderImfoList = getOrderImformation(searchContent);
+				if(Objects.equals(orderImfoList, null)) {
+					return;
+				}
+				addData(orderImfoList);
 				}
 		});
-		
-		
-		
-		
+			
 		//构造方法结束
 	}
 	
 	public void showRecordWindows() {
 	
 		tableModel.setRowCount(0);
-		//
-		//插入数据部分
+		List<OrderImformation> orderImfoList = getOrderImformation("");
+		if(!Objects.equals(orderImfoList, null)) {
+			addData(orderImfoList);
+		}
 		
 		searchTextField.setText("");
 		
@@ -118,7 +151,6 @@ public class AdminOrderButton extends JButton{
 		frame.setSize(830,380);
 		frame.setVisible(true);
 		
-		System.out.println("sssss");
 		
 	}
 	//包含按钮的名称以及按钮图片的名称
@@ -171,28 +203,65 @@ public class AdminOrderButton extends JButton{
 	}
 	
 	
-	//往Tabel的Model中加入数据
+	//往JTabel的Model中加入数据
 	public void addData(List<OrderImformation> orderImfoList) {
 		
+		
+		for(int i=orderImfoList.size()-1;i>=0;i--) {
+			Vector<Object> addRow = new Vector<Object>();
+			
+			OrderImformation orderImfo = orderImfoList.get(i);
+			if(!orderImfo.getStatus().equals("待受理")) {
+				continue;
+			}
+			addRow.add(orderImfo.getOrderId());
+			addRow.add(orderImfo.getOrderType());
+			addRow.add(orderImfo.getOrderName());
+			addRow.add(orderImfo.getUserAccount());
+			addRow.add(orderImfo.getOrderTypeId());
+			addRow.add(orderImfo.getOrderTime());
+			addRow.add(orderImfo.getPrice());
+			addRow.add(orderImfo.getStatus());
+			tableModel.addRow(addRow);
+		}
 	}
 	
-	//从Tabel的Model中删除数据
-	public void deleteData() {
+	public OrderIdBean getIdList() {
 		
+		int []rows = table.getSelectedRows();
+		if(Objects.equals(rows, null)) {
+			return null;
+		}
+		
+		orderIdBean = new OrderIdBean(rows.length);
+		int[] idList = orderIdBean.getIdList();
+		//删除的同时记录下id
+		for(int i=rows.length-1;i>=0;i--) {
+			idList[i] = (int) tableModel.getValueAt(rows[i], 0);
+			tableModel.removeRow(rows[i]);
+		}
+		
+		return orderIdBean;
 	}
+	
+	
+	static OrderController controller = new OrderController();
 	
 	//从数据库获取订单信息
 	public List<OrderImformation> getOrderImformation(String search){
-		return null;
+		
+		return controller.getOrderImformation(search);
 		
 	}
 	
 	
-	//从数据库删除信息
-	public boolean deleteImformation(OrderIdBean orderIdBean) {
-		return false;
-		
+	//设置订单受理信息
+	public void setOrderStatus(OrderIdBean orderIdBean,boolean status) {
+		controller.setOrderStatus(orderIdBean, status);
 	}
-	
+
+	public void dealReturnBalance(OrderIdBean orderIdBean) {
+		controller.dealReturnBalance(orderIdBean);
+	}
 	
 }

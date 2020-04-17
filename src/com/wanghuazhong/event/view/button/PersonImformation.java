@@ -4,6 +4,8 @@ import java.awt.FlowLayout;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.lang.reflect.Array;
+import java.util.Objects;
 
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
@@ -15,7 +17,7 @@ import javax.swing.JPanel;
 import javax.swing.JTextField;
 
 import com.wanghuazhong.event.bean.AlterPersonImformationBean;
-import com.wanghuazhong.event.controller.AlterPersonImformationController;
+import com.wanghuazhong.event.controller.UserController;
 import com.wanghuazhong.event.view.operatewindows.WindowsCompoment;
 import com.wanghuazhong.event.view.signwindow.SignInCompoment;
 
@@ -26,6 +28,9 @@ public class PersonImformation extends JButton{
 	private AlterPersonImformationBean personImformation = new AlterPersonImformationBean();
 	private JCheckBox password = new JCheckBox("是");
 	JTextField fieldPassword =new JTextField(15);
+	JDialog dialog= new JDialog(WindowsCompoment.operaPane, "个人信息",  true);
+	
+	
 	public PersonImformation() {
 		super();
 		// TODO 自动生成的构造函数存根
@@ -45,29 +50,18 @@ public class PersonImformation extends JButton{
 			}
 		
 		});
-		
-		
-		
-	}
-	
-
-	public void showRecordWindow() {
-		//构建出窗口
-		JDialog dialog= new JDialog(WindowsCompoment.operaPane, "个人信息",  true);
-		
+				
+		//构建出窗口布局
 		JPanel panel = new JPanel();
 		panel.setLayout(new FlowLayout());
-		dialog.setContentPane(panel);
-		
+		dialog.setContentPane(panel);		
 		//控件
 		JLabel blankLabel = new JLabel("    ");
 		JLabel labelName = new JLabel("姓名:");
 		JLabel labelSex= new JLabel("性别");
 		JLabel labelPassword= new JLabel("密码:");
 		JLabel labelEnterRule1=new JLabel("提示:各个输入应不超过15位 ");
-
 		JButton button = new JButton("确定");	
-		
 		
 		password.addActionListener(new ActionListener() {
 
@@ -81,12 +75,7 @@ public class PersonImformation extends JButton{
 					fieldPassword.setEnabled(false);
 				}
 			}
-			
-			
 		});
-		
-		
-		
 		
 		button.addActionListener(e->{
 			
@@ -113,28 +102,25 @@ public class PersonImformation extends JButton{
 		boxSex.addItem("请选择");
 		boxSex.addItem("男");
 		boxSex.addItem("女");
-		
 		panel.add(labelName);
 		panel.add(fieldName);
-		
 		panel.add(labelSex);
 		panel.add(boxSex);
 		panel.add(blankLabel);
-		
 		panel.add(password);
 		panel.add(labelPassword);
 		panel.add(fieldPassword);
-		
-		panel.add(labelEnterRule1);
-		
+		panel.add(labelEnterRule1);	
 		panel.add(button);
-		
 		button.addActionListener( (e)->{
 			dialog.setVisible(false);
-			
 		});
-		
 		//控件的设置
+	}
+	
+
+	public void showRecordWindow() {
+
 		setPersonImformation();
 		password.setSelected(false);
 		fieldPassword.setEnabled(false);
@@ -154,19 +140,32 @@ public class PersonImformation extends JButton{
 		JOptionPane.showMessageDialog(SignInCompoment.getSignInWindows(), "您的输入不规范\n请重新输入");
 	}
 
-		
-	static AlterPersonImformationController controller = new AlterPersonImformationController();
 	
 	public boolean checkImformation(AlterPersonImformationBean alterPersonImformationBean) {
 		
-		return controller.checkImformation(alterPersonImformationBean);
+		String [] content = new String[3];
+		content[0]=alterPersonImformationBean.getName();
+		content[1]=alterPersonImformationBean.getPassword();
+		content[2]=alterPersonImformationBean.getSex();
+	
+		for(int i=0;i<Array.getLength(content);i++) {
+			if(Objects.equals(content[i], null))
+				continue;
+			if(Objects.equals(content[i], "")||Objects.equals(content[i], "请选择")||content[i].length()>15) {
+				return true;
+			}
+	}
+		return false;
 		
 	}
 	
 	
-	public boolean alterImformation(AlterPersonImformationBean alterPersonImformationBean) {
+	static UserController controller = new UserController();
+	
+	
+	public void alterImformation(AlterPersonImformationBean alterPersonImformationBean) {
 		
-		return controller.alterImformation(alterPersonImformationBean);
+		 controller.alterImformation(alterPersonImformationBean);
 		
 	}
 	
@@ -175,6 +174,7 @@ public class PersonImformation extends JButton{
 		return controller.getPersonImformation();
 		
 	}
+	
 	
 	public void setPersonImformation() {
 		

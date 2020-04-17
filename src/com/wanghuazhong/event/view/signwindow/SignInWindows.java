@@ -85,11 +85,6 @@ public class SignInWindows extends JFrame {
 		}
 
 	
-	//获取登录记录
-	public void getSignInAccount() {
-		
-	}
-	
 
 }
 		
